@@ -7,7 +7,7 @@ services:
     region: ohio
     buildCommand: "cd backend && pip install -r requirements.txt"
     # Run the RQ worker in the background and uvicorn in the foreground
-    startCommand: "cd backend && (rq worker -u $REDIS_URL satori_tasks & uvicorn api.main:app --host 0.0.0.0 --port $PORT)"
+    startCommand: "cd backend && (python -m rq worker -u $REDIS_URL satori_tasks & python -m uvicorn api.main:app --host 0.0.0.0 --port $PORT)"
     envVars:
       - key: MONGO_URI
         sync: false
