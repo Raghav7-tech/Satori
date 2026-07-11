@@ -17,7 +17,9 @@ Satori turns raw git history into a living map of risk — the files nobody unde
 [![Gemini](https://img.shields.io/badge/Gemini-1.5%20Flash-8E75B2?logo=googlegemini&logoColor=white)](https://ai.google.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-[**Live Demo**](#) · [Features](#features) · [Architecture](#architecture) · [Local Setup](#local-setup)
+🚀 **Live URL**: [https://satori-khaki-ten.vercel.app/](https://satori-khaki-ten.vercel.app/)
+
+[**Live Demo**](https://satori-khaki-ten.vercel.app/) · [Features](#features) · [Architecture](#architecture) · [Local Setup](#local-setup)
 
 </div>
 
