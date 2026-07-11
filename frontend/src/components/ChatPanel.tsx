@@ -31,7 +31,8 @@ export const ChatPanel: React.FC<{ state: string, data: GraphResponse | null, cu
     setErrorMsg(null);
 
     try {
-      const response = await axios.post(`http://localhost:8000/repos/${currentJobId}/chat`, {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await axios.post(`${baseUrl}/repos/${currentJobId}/chat`, {
         messages: newMessages
       }, { timeout: 20000 });
       setMessages([...newMessages, { role: 'assistant', content: response.data.reply }]);
