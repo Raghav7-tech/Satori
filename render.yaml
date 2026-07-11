@@ -16,7 +16,7 @@ services:
       - key: GOOGLE_API_KEY
         sync: false
       - key: CORS_ORIGINS
-        sync: false
+        value: "https://satori-khaki-ten.vercel.app"
       - key: GITHUB_TOKEN
         sync: false
       - key: PYTHONPATH
