@@ -1,0 +1,47 @@
+services:
+  # Backend API Service
+  - type: web
+    name: satori-api
+    env: python
+    region: ohio
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn api.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: PYTHONPATH
+        value: ".."
+
+  # Background Worker Service
+  - type: worker
+    name: satori-worker
+    env: python
+    region: ohio
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && rq worker -u $REDIS_URL --worker-class rq.worker.SimpleWorker satori_tasks"
+    envVars:
+      - key: MONGO_URI
+        fromService:
+          name: satori-api
+          type: web
+          envVarKey: MONGO_URI
+      - key: REDIS_URL
+        fromService:
+          name: satori-api
+          type: web
+          envVarKey: REDIS_URL
+      - key: GITHUB_TOKEN
+        fromService:
+          name: satori-api
+          type: web
+          envVarKey: GITHUB_TOKEN
+      - key: PYTHONPATH
+        value: ".."
