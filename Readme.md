@@ -36,19 +36,19 @@ Point it at any public GitHub repository. No login required.
 ## Screenshots
 
 <div align="center">
-<img src="satori1.jpg" alt="Satori App View 1" width="90%" />
+<img src="proofs\satori1.jpg" alt="Satori App View 1" width="90%" />
 <br /><br />
-<img src="satori2.jpg" alt="Satori App View 2" width="90%" />
+<img src="proofs\satori2.jpg" alt="Satori App View 2" width="90%" />
 <br /><br />
-<img src="satori3.jpg" alt="Satori App View 3" width="90%" />
+<img src="proofs\satori3.jpg" alt="Satori App View 3" width="90%" />
 <br /><br />
-<img src="satori4.jpg" alt="Satori App View 4" width="90%" />
+<img src="proofs\satori4.jpg" alt="Satori App View 4" width="90%" />
 <br /><br />
-<img src="satori5.jpg" alt="Satori App View 5" width="90%" />
+<img src="proofs\satori5.jpg" alt="Satori App View 5" width="90%" />
 <br /><br />
-<img src="satori6.jpg" alt="Satori App View 6" width="90%" />
+<img src="proofs\satori6.jpg" alt="Satori App View 6" width="90%" />
 <br /><br />
-<img src="satori7.jpg" alt="Satori App View 7" width="90%" />
+<img src="proofs\satori7.jpg" alt="Satori App View 7" width="90%" />
 </div>
 
 ---
@@ -101,6 +101,10 @@ API server (FastAPI) ──▶ Job queue (Redis + RQ) ──▶ Analysis worker
 ```
 
 Analysis runs asynchronously so the API stays responsive regardless of repository size. Repeated requests for an unchanged repository are served from cache rather than re-cloned and re-mined.
+
+### Free Tier Keep-Alive
+
+Satori is designed to run efficiently on free-tier services. To prevent Render's free web services from spinning down after 15 minutes of inactivity, this repository includes a GitHub Actions workflow (`.github/workflows/keepalive.yml`) that pings the backend `/health` endpoint every 10 minutes. This ensures the API remains instantly responsive for new users. (Note: MongoDB Atlas M0 clusters and Upstash Redis free tiers do not pause due to inactivity, so they require no keep-alive).
 
 ### Tech Stack
 
@@ -189,7 +193,7 @@ Visit `http://localhost:5173`, paste a public GitHub repository URL, and analyze
 MIT — see [LICENSE](./LICENSE) for details.
 
 <div align="center">
-<sub>Built for developers who inherit other people's code.</sub>
+<sub>Built for engineering teams managing complex codebases.</sub>
 <br />
 <sub>Created by Raghav Dhingra</sub>
 </div>

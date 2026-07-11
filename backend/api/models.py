@@ -8,7 +8,7 @@ class AnalyzeRequest(BaseModel):
     @field_validator('url')
     @classmethod
     def validate_github_url(cls, v: str) -> str:
-        pattern = r'^https://github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)/?$'
+        pattern = r'^https?://(www\.)?github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)/?$'
         if not re.match(pattern, v):
             raise ValueError('Must be a valid public GitHub repository URL (e.g. https://github.com/owner/repo)')
         return v
