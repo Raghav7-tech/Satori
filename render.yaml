@@ -1,11 +1,13 @@
 services:
-  # Backend API Service
+  # Backend API + Worker Service (Combined to fit Free Tier)
   - type: web
     name: satori-api
     env: python
+    plan: free
     region: ohio
     buildCommand: "cd backend && pip install -r requirements.txt"
-    startCommand: "cd backend && uvicorn api.main:app --host 0.0.0.0 --port $PORT"
+    # Run the RQ worker in the background and uvicorn in the foreground
+    startCommand: "cd backend && (rq worker -u $REDIS_URL satori_tasks & uvicorn api.main:app --host 0.0.0.0 --port $PORT)"
     envVars:
       - key: MONGO_URI
         sync: false
@@ -17,31 +19,5 @@ services:
         sync: false
       - key: GITHUB_TOKEN
         sync: false
-      - key: PYTHONPATH
-        value: ".."
-
-  # Background Worker Service
-  - type: worker
-    name: satori-worker
-    env: python
-    region: ohio
-    buildCommand: "cd backend && pip install -r requirements.txt"
-    startCommand: "cd backend && rq worker -u $REDIS_URL --worker-class rq.worker.SimpleWorker satori_tasks"
-    envVars:
-      - key: MONGO_URI
-        fromService:
-          name: satori-api
-          type: web
-          envVarKey: MONGO_URI
-      - key: REDIS_URL
-        fromService:
-          name: satori-api
-          type: web
-          envVarKey: REDIS_URL
-      - key: GITHUB_TOKEN
-        fromService:
-          name: satori-api
-          type: web
-          envVarKey: GITHUB_TOKEN
       - key: PYTHONPATH
         value: ".."
