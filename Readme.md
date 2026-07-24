@@ -60,7 +60,7 @@ Point it at any public GitHub repository. No login required.
 **🔥 Risk Heatmap**
 Every file sized and colored by a computed risk score — churn, bug density, and bus factor combined into one number, so danger is visible at a glance instead of buried in commit logs.
 
-**🕸️ Interactive Dependency Graph**
+**🕸️ Interactive Dependency Graphs**
 A force-directed, explorable map of how your files actually depend on each other. Drag nodes, trace paths, filter by name — the architecture as it really is, not as a stale wiki diagram remembers it.
 
 **📊 Repo Health Grade**
