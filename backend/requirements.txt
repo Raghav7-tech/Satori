@@ -8,7 +8,7 @@ python-dotenv
 slowapi
 rq
 redis
-google-generativeai
+google-genai
 requests
 GitPython
 pydriller

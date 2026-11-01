@@ -34,11 +34,11 @@ export const ChatPanel: React.FC<{ state: string, data: GraphResponse | null, cu
       const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       const response = await axios.post(`${baseUrl}/repos/${currentJobId}/chat`, {
         messages: newMessages
-      }, { timeout: 20000 });
+      }, { timeout: 60000 });
       setMessages([...newMessages, { role: 'assistant', content: response.data.reply }]);
     } catch (err: any) {
       if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
-        setErrorMsg("Request timed out. The AI took too long to respond.");
+        setErrorMsg("The AI service did not respond in time. Please try again.");
       } else if (err.response?.status === 429) {
         setErrorMsg(err.response.data?.detail || "Rate limit reached. Please try again in a moment.");
       } else if (err.response?.status === 404) {

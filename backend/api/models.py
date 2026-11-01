@@ -1,6 +1,6 @@
 import re
-from pydantic import BaseModel, HttpUrl, field_validator
-from typing import Optional, List, Dict, Any
+from pydantic import BaseModel, Field, field_validator
+from typing import Literal, Optional, List
 # dd
 class AnalyzeRequest(BaseModel):
     url: str
@@ -22,11 +22,11 @@ class RepoStatusResponse(BaseModel):
     message: Optional[str] = None
 
 class ChatMessage(BaseModel):
-    role: str
-    content: str
+    role: Literal["user", "assistant"]
+    content: str = Field(min_length=1, max_length=8_000)
 
 class ChatRequest(BaseModel):
-    messages: List[ChatMessage]
+    messages: List[ChatMessage] = Field(min_length=1, max_length=50)
 
 class ChatResponse(BaseModel):
     reply: str
