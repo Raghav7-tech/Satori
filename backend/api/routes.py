@@ -105,7 +105,7 @@ def global_key_func(request: Request) -> str:
 
 from backend.api.models import ChatRequest, ChatResponse
 
-CHAT_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
+CHAT_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 CHAT_TIMEOUT_SECONDS = 45
 CHAT_MAX_FILE_CHARS = 8_000
 CHAT_MAX_HISTORY_MESSAGES = 20
