@@ -149,7 +149,7 @@ def test_chat_uses_low_thinking_and_returns_reply(mock_db, monkeypatch):
     assert response.status_code == 200
     assert response.json() == {"reply": "Grounded repository advice"}
     call = ai_client.aio.models.generate_content.await_args
-    assert call.kwargs["model"] == "gemini-2.5-flash"
+    assert call.kwargs["model"] == "gemini-3.5-flash-lite"
     assert call.kwargs["config"].thinking_config.thinking_level == types.ThinkingLevel.LOW
     ai_client.aio.aclose.assert_awaited_once()
     ai_client.close.assert_called_once()
