@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 import os
 from fastapi import APIRouter, HTTPException, Request
 from rq import Queue
@@ -14,6 +15,7 @@ from backend.api.models import AnalyzeRequest, RepoStatusResponse, JobStatusResp
 from backend.db.client import get_repos_collection
 from backend.core.git_utils import parse_github_url, get_latest_commit_sha, check_repo_size_limits, OversizedRepositoryError, GitUtilsError
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # Redis queue setup
@@ -176,13 +178,17 @@ async def chat_repo(request: Request, job_id: str, body: ChatRequest):
         raise HTTPException(status_code=500, detail="Google API key not configured")
         
     system_instruction = _build_chat_context(repo_doc, job_id)
-    gemini_messages = [
-        types.Content(
-            role="model" if message.role == "assistant" else "user",
-            parts=[types.Part.from_text(text=message.content)],
-        )
-        for message in body.messages[-CHAT_MAX_HISTORY_MESSAGES:]
-    ]
+    gemini_messages = []
+    for message in body.messages[-CHAT_MAX_HISTORY_MESSAGES:]:
+        role = "model" if message.role == "assistant" else "user"
+        if gemini_messages and gemini_messages[-1].role == role:
+            previous = gemini_messages[-1]
+            previous.parts.append(types.Part.from_text(text=f"\n\n{message.content}"))
+        else:
+            gemini_messages.append(types.Content(
+                role=role,
+                parts=[types.Part.from_text(text=message.content)],
+            ))
 
     client = genai.Client(
         api_key=api_key,
@@ -220,10 +226,12 @@ async def chat_repo(request: Request, job_id: str, body: ChatRequest):
             raise HTTPException(status_code=503, detail="AI service authentication failed. Check the configured API key.")
         if e.code == 404:
             raise HTTPException(status_code=503, detail=f"Configured AI model '{CHAT_MODEL}' is unavailable.")
+        logger.error("Gemini API request failed with status %s: %s", e.code, str(e)[:500])
         raise HTTPException(status_code=502, detail="AI service is temporarily unavailable. Please try again.")
     except HTTPException:
         raise
-    except Exception:
+    except Exception as e:
+        logger.exception("Unexpected error while generating chat response: %s", str(e)[:500])
         raise HTTPException(status_code=502, detail="AI service is temporarily unavailable. Please try again.")
     finally:
         await client.aio.aclose()
