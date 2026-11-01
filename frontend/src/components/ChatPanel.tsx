@@ -89,6 +89,7 @@ export const ChatPanel: React.FC<{ state: string, data: GraphResponse | null, cu
           bottom: '24px',
           right: '24px',
           width: '380px',
+          maxWidth: 'calc(100vw - 32px)',
           height: '600px',
           maxHeight: 'calc(100vh - 120px)',
           background: 'rgba(19,21,27,0.95)',
@@ -115,7 +116,7 @@ export const ChatPanel: React.FC<{ state: string, data: GraphResponse | null, cu
           </button>
         </div>
 
-        <div className="chat-messages" style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="chat-messages" style={{ flex: 1, minWidth: 0, overflowY: 'auto', overflowX: 'hidden', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', color: 'var(--muted)', marginTop: '40px', fontSize: '13.5px' }}>
               <MessageSquare size={32} style={{ margin: '0 auto 12px', opacity: 0.5 }} />
@@ -128,9 +129,10 @@ export const ChatPanel: React.FC<{ state: string, data: GraphResponse | null, cu
           )}
           
           {messages.map((m, i) => (
-            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+            <div key={i} style={{ display: 'flex', minWidth: 0, maxWidth: '100%', flexDirection: 'column', alignItems: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
               <div style={{ 
-                maxWidth: '85%', 
+                boxSizing: 'border-box',
+                maxWidth: '85%',
                 padding: '10px 14px', 
                 borderRadius: '12px',
                 borderBottomRightRadius: m.role === 'user' ? '4px' : '12px',
@@ -139,6 +141,7 @@ export const ChatPanel: React.FC<{ state: string, data: GraphResponse | null, cu
                 color: m.role === 'user' ? '#fff' : 'var(--text)',
                 fontSize: '13.5px',
                 lineHeight: 1.5,
+                overflowWrap: 'anywhere',
                 border: m.role === 'assistant' ? '1px solid var(--border)' : 'none'
               }}>
                 {m.content}
